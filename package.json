@@ -1,0 +1,25 @@
+{
+  "name": "CLI-Hangman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoMoFo/CLI-Hangman.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CoMoFo/CLI-Hangman/issues"
+  },
+  "homepage": "https://github.com/CoMoFo/CLI-Hangman#readme",
+  "dependencies": {
+    "inquirer": "^6.2.0",
+    "random-words": "^1.1.0",
+    "require": "^2.4.20"
+  }
+}
