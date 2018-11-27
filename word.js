@@ -34,10 +34,10 @@ var word = function(givenWord){
 
     //A function that takes a character as an aargument and calls the (guessCheck) function on each letter object. 
     this.guessCheckAgain = function(character){
-        for (let d = 0; d < this.arrayOfLetters.length; d++){
-            let elem = this.arrayOfLetters[d].guessCheck(character);
+        for (let d = 0; d < this.arrayOfLetters.length; d ++){
+            var elem = this.arrayOfLetters[d].guessCheck(character);
             
-            return elem;
+           
                                                    }
                                               };
 

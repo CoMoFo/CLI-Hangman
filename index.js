@@ -7,43 +7,118 @@ var inquirer = require ("inquirer");
 //Random word generator
 var randomWords = require('random-words');
 
-// Initialize a new game
-// Makes a guess
-// Check if guess is good
-        // Do this by creating an array of all the 'guessed' booleans for each letter of the word. if that array.includes(false) then there are letters remaining to be guessed. 
+
+// Pass random word through Word constructor
+computerWord = new word(randomWords());
+var requireNewWord = false;
+// Array for guessed letters
+var incorrectLetters = [];
+var correctLetters = [];
+// Guesses left
+var guessesLeft = 10;
+
+
+
+function knowledge() {
+    // Generates new word for Word constructor if true
+    if (requireNewWord) {
+
+        // Passes random word through the Word constructor
+        computerWord = new word(randomWords());
         
-        // If the guess is bad then the displayed string will be the same. 
+        requireNewWord = false;
+    }
+    // TestS if a letter guessed is correct
+    var wordComplete = [];
+    computerWord.arrayOfLetters.forEach(completeCheck);
+    // letters remaining to be guessed
+    if (wordComplete.includes(false)) {
+        console.log(computerWord.returnDisplayString())   
+        inquirer
+            .prompt([
+                {
+                    type: "input",
+                    message: "Guess a letter between A-Z!",
+                    name: "userinput"
+                }
+            ])
+            .then(function (input) {
+               
+                if (input.userinput.length > 1) {
+                    console.log("\nPlease try again!\n");
+                    knowledge();
+                } else {
+                   
+                    if (incorrectLetters.includes(input.userinput) || correctLetters.includes(input.userinput) || input.userinput === "") {
+                        console.log("\nAlready Guessed or Nothing Entered\n");
+                        knowledge();
+                    } else {
+                        // Checks if guess is correct
+                        var wordCheckArray = [];
+                        
+                        computerWord.guessCheckAgain(input.userinput);
+                        // Checks if guess is correct
+                        computerWord.arrayOfLetters.forEach(wordCheck);
+                        if (wordCheckArray.join('') === wordComplete.join('')) {
+                            console.log("\nIncorrect\n");
 
-
-
-//   * Randomly selects a word and uses the `Word` constructor to store it  
-
-var wordGen = function(){
-    var guessThis = new word(randomWords());
-        return guessThis
-                        };
-
-// * Prompts the user for each guess and keeps track of the user's remaining guesses
-let remainingGuesses = 10
-
-var makeGuess = function(){
-inquirer 
-        .prompt([
-                        {
-                            name: "letterGuessed",
-                            message: "\n Pick a letter any letter "
-                                    + "\n Guesses remaining: " + remainingGuesses
+                            incorrectLetters.push(input.userinput);
+                            guessesLeft--;
+                        } else {
+                            console.log("\nCorrect!\n");
+ 
+                            correctLetters.push(input.userinput);
                         }
-                    
-        ]).then(function(response){
-                
+                        console.log(computerWord.returnDisplayString())
+                       
+                        // Print guesses left
+                        console.log("Guesses Left: " + guessesLeft + "\n");
+                        // Print letters guessed already
+                        console.log("Letters Guessed Incorrectly: " + incorrectLetters.join(" ") + "\n");
+                        // Guesses left
+                        if (guessesLeft > 0) {
+                            // Call function 
+                            knowledge();
+                        } else {
+                            console.log("Sorry, you lose!\n");
+                            restartGame();
+                        }
+                        
+                        function wordCheck(key) {
+                            wordCheckArray.push(key.guessed);
+                        }
+                    }
+                }
+            })
+    } else {
+        console.log("YOU WIN!\n");
+        restartGame();
+    }
+   
+    function completeCheck(key) {
+        wordComplete.push(key.guessed);
+    }
+}
+function restartGame() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "Would you like to:",
+                choices: ["Play Again", "Exit"],
+                name: "restart"
+            }
+        ])
+        .then(function (input) {
+            if (input.restart === "Play Again") {
+                requireNewWord = true;
+                incorrectLetters = [];
+                correctLetters = [];
+                guessesLeft = 10;
+                knowledge();
+            } else {
+                return
+            }
         })
-                            } //End makeGuess
-
-// Command for showing how many letters remain to be guessed.
-// console.log(wordGen().returnDisplayString())
-
-makeGuess();
-
-// var test = new word("giver");
-// console.log("testing: ", test)
+}
+knowledge();
